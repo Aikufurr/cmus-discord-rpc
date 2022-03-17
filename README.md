@@ -1,38 +1,10 @@
 # cmus-discord-rpc
 
-![Rust][github-actions-badge] [![Discord][discord-badge]][discord-invite]
+[![forthebadge](https://forthebadge.com/images/badges/made-with-rust.svg)](https://forthebadge.com) 
+[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
-Discord Rich Presence integration for the C* Music Player (`cmus`).
+Discord Rich Presence integration for the C* Music Player (`cmus`) with album cover support and links to the album for [Lapfox](https://lapfoxtrax.fandom.com) songs.
 
-## Installing
-
-- If it isn't already on your system, install `rust`, and `cargo`. On \*nix based systems this should be as simple as installing it from your package manager.
-
-- Obtain the sources. You can either do this by cloning the repository using `git` or downloading an archive of the repository.
-
-  Cloning using HTTPS:
-
-      git clone https://github.com/Bond-009/cmus-discord-rpc
-
-  Cloning using `ssh`:
-
-      git clone git@github.com:Bond-009/cmus-discord-rpc.git
-
-  Downloading an archive using `wget`:
-
-       wget https://github.com/Bond-009/cmus-discord-rpc/archive/master.zip
-
-       unzip master.zip
-
-- Change your directory into where the sources were cloned/extracted to.
-
-      cd cmus-discord-rpc
-
-- Next, build and install it to your home directory.
-
-      cargo install --path .
-
-- Once `cargo`'s installation directory is in your `PATH` (`cargo` should tell you where the end of the previous step) simply run `cmus-discord-rpc` and it should start!
 
 ## Building
 
@@ -52,6 +24,32 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - You should see a new directory called `target`. There you can find subfolders for each of your build targets.
 
+- To use globally, build for production use and then copy to your local bin
+
+      sudo cp ./target/release/cmus-discord-rpc /usr/local/bin
+      
+- To run on startup, you can use systemctl
+
+      nano ~/.config/systemd/user/cmus-discord-rpc.service
+      
+  Paste in the following
+  
+      [Unit]
+      Description="Service for cmus-discord-rpc
+
+      [Service]
+      ExecStart=/usr/local/bin/cmus-discord-rpc
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+      
+  `CTRL+O [enter] CTRL+X` to save and close
+  
+  Then you can enable the service to run on startup and run straight away by doing
+  
+      systemctl --user enable --now cmus-discord-rpc
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
@@ -66,7 +64,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
-
-[github-actions-badge]: https://github.com/Bond-009/cmus-discord-rpc/workflows/Rust/badge.svg
-[discord-badge]: https://discordapp.com/api/guilds/261241776105455618/widget.png
-[discord-invite]: https://discordapp.com/invite/thKXwJb
