@@ -40,6 +40,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`) with album co
       [Service]
       ExecStart=/usr/local/bin/cmus-discord-rpc
       Restart=always
+      RestartSec=10
 
       [Install]
       WantedBy=multi-user.target
