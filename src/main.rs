@@ -55,6 +55,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut output = String::new();
 
+    let mut last_paused = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+    let mut logged_last_paused = true;
+
     loop {
         if stream.write_all(b"status\n").is_err() {
             drpc.close()?;
@@ -81,6 +84,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut url_string: String;
         let mut assets = activity::Assets::new();
         let album_url: String;
+        let top_line: String;
+
         if status != Status::Stopped {
             let artist = get_value(&output, "tag artist");
             let title = get_value(&output, "tag title");
@@ -99,7 +104,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             // -- Album cover --
             // Capture folder of artist and folder
-            let file_r = Regex::new(r"(?m)^file *.+/(.+)/(.+)/(.+)/").unwrap();
+            let file_r = Regex::new(r"(?mU)^file *.+Music/(.+)/(.+)/(.+)/").unwrap();
             let base_folder: &str;
             let artist_folder: &str;
             let album_folder: &str;
@@ -138,11 +143,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
 
             if status == Status::Playing {
+                logged_last_paused = false;
                 let duration = get_value(&output, "duration").unwrap().parse::<u64>().unwrap();
                 let position = get_value(&output, "position").unwrap().parse::<u64>().unwrap();
                 let sce = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
                 let num:u64 = sce + duration - position;
                 let ts = activity::Timestamps::new().end(num as i64);
+                ac = ac.timestamps(ts);
+            } else if status == Status::Paused {
+                if !logged_last_paused {
+                    last_paused = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+                    logged_last_paused = true;
+                }
+
+                top_line = title.unwrap().to_owned() + " - " + artist.unwrap();
+                ac = ac.details(&top_line);
+                ac = ac.state("Paused");
+                let ts = activity::Timestamps::new().start(last_paused as i64);
                 ac = ac.timestamps(ts);
             }
         } else {
