@@ -3,7 +3,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-rust.svg)](https://forthebadge.com) 
 [![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
-Discord Rich Presence integration for the C* Music Player (`cmus`) with album cover support and links to the album for [Lapfox](https://lapfoxtrax.fandom.com) songs.
+Discord Rich Presence integration for the C* Music Player (`cmus`) with album cover support and links to the album for <a href="https://lapfoxtrax.fandom.com" target="_blank" rel="noopener noreferrer" title="***Please middle click on mouse to open in new tab***&#013Github Markdown does not support opening new pages">Lapfox</a> songs.
 
 
 ## Building
